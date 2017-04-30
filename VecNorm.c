@@ -109,14 +109,16 @@ void Over10kCalculations(float * vec){
 	int avgTime[10000];
 	int sumTime;
 	double totalAvg;
+	int j = 0;
 
 	//normalize each and every vector using the C function. All of them.
-	for (int i=0;i<10000;i+=3){
+	for (int i=0;i<30000;i+=3){
 		temp[0] = vec[i+0];
 		temp[1] = vec[i+1];
 		temp[2] = vec[i+2];
-		avgTime[i] = Normalize(temp);
-		printf("Avg time for vector #%i: %ims\n", i, avgTime[i]);
+		avgTime[j] = Normalize(temp);
+		printf("Time for vector #%i: %ims\n -----\n", j, avgTime[j]);
+		j++;
 	}
 	
 // 	for (int i=0;i<10000;i+=3){
@@ -127,14 +129,15 @@ void Over10kCalculations(float * vec){
 // 		printf("Avg time for vector #%i: %ims\n", i, avgTime[i]);
 // 	}
 	
-	//sum up total time to normalize 10,000 vectors
+	//sum up total time to normalize 10,000 vectors ;;Problems occurring here
 	for (int i=0;i<10000;i++){
 		sumTime += avgTime[i];
 	}
 	
-	//divide by number of vectors to get average ;;Problems occurring here
+	//divide by number of vectors to get average
 	totalAvg = sumTime/10000.0;
-	
+
+	printf("The total Calculation time is %dms\n", sumTime);	
 	printf("The average Calculation time is %fms\n", totalAvg);
 	
 	return;

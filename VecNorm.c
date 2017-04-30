@@ -16,8 +16,8 @@ int main(){
 	printf( "Enter a vector like so: 3.5 7.3 1.1; or three zeros to generate vectors\n");
 	scanf("%f %f %f", &a[0], &a[1], &a[2]);
 	
-	//If the first vector is zero, generate 10k vectors and run normalization test
-	if(a[0] == 0){
+	//If the vector is zero, generate 10k vectors and run normalization test
+	if(a[0] == 0 && a[1] == 0 && a[2] == 0 ){
 		vectors = generate10k();
 		Over10kCalculations(vectors);
 		printf("Goodbye!\n");
@@ -46,7 +46,9 @@ int Normalize(float a[]){
 	float aN[3]; 
 	float aMag;
 	
-	//Magnitute equals the square root of the sum of squares
+	printf("Vector being normalized:[%f %f %f]\n", a[0], a[1], a[2]);
+	
+	//Magnitude equals the square root of the sum of squares
 	aMag = sqrt(a[0]*a[0] + a[1]*a[1] +a[2]*a[2]);
 	
 	//normalized vector equals vector over magnitude
@@ -86,7 +88,7 @@ float * generate10k(){
 	FILE *fp;
 	srand((unsigned int)time(NULL));
 	float b = 5.0;
-	float vec[30000];
+	static float vec[30000];
 	
 	printf("Generating 10,000 floating point vectors and saving them to 10kVectors.txt...\n");
 	
@@ -111,16 +113,25 @@ void Over10kCalculations(float * vec){
 	double totalAvg;
 	int j = 0;
 
-	//normalize each and every vector using the C function. All of them.
+	//normalize each and every vector using the C function. All of them. 
 	for (int i=0;i<30000;i+=3){
 		temp[0] = vec[i+0];
 		temp[1] = vec[i+1];
 		temp[2] = vec[i+2];
 		avgTime[j] = Normalize(temp);
 		printf("Time for vector #%i: %ims\n -----\n", j, avgTime[j]);
+		
+		sumTime += avgTime[j];
 		j++;
 	}
 	
+	//divide by number of vectors to get average
+	totalAvg = sumTime/10000.0;
+
+	printf("The total Calculation time in C is %dms\n", sumTime);	
+	printf("The average Calculation time in C is %fms\n", totalAvg);
+	
+	//normalize each and every vector using the x86 function. All of them. 
 // 	for (int i=0;i<10000;i+=3){
 // 		temp[0] = vec[i+0];
 // 		temp[1] = vec[i+1];
@@ -128,17 +139,6 @@ void Over10kCalculations(float * vec){
 // 		avgTime[i] = NormalizeASM(temp);
 // 		printf("Avg time for vector #%i: %ims\n", i, avgTime[i]);
 // 	}
-	
-	//sum up total time to normalize 10,000 vectors ;;Problems occurring here
-	for (int i=0;i<10000;i++){
-		sumTime += avgTime[i];
-	}
-	
-	//divide by number of vectors to get average
-	totalAvg = sumTime/10000.0;
-
-	printf("The total Calculation time is %dms\n", sumTime);	
-	printf("The average Calculation time is %fms\n", totalAvg);
 	
 	return;
 }

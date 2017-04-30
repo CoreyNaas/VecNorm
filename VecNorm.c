@@ -109,8 +109,10 @@ float * generate10k(){
 void Over10kCalculations(float * vec){
 	float temp[3];
 	int avgTime[10000];
-	int sumTime;
-	double totalAvg;
+	int sumTimeC;
+	int sumTimeASM;
+	double totalAvgC;
+	double totalAvgASM;
 	int j = 0;
 
 	//normalize each and every vector using the C function. All of them. 
@@ -121,24 +123,32 @@ void Over10kCalculations(float * vec){
 		avgTime[j] = Normalize(temp);
 		printf("Time for vector #%i: %ims\n -----\n", j, avgTime[j]);
 		
-		sumTime += avgTime[j];
+		sumTimeC += avgTime[j];
 		j++;
 	}
 	
-	//divide by number of vectors to get average
-	totalAvg = sumTime/10000.0;
-
-	printf("The total Calculation time in C is %dms\n", sumTime);	
-	printf("The average Calculation time in C is %fms\n", totalAvg);
-	
 	//normalize each and every vector using the x86 function. All of them. 
-// 	for (int i=0;i<10000;i+=3){
-// 		temp[0] = vec[i+0];
-// 		temp[1] = vec[i+1];
-// 		temp[2] = vec[i+2];
-// 		avgTime[i] = NormalizeASM(temp);
-// 		printf("Avg time for vector #%i: %ims\n", i, avgTime[i]);
-// 	}
+	j=0;
+	for (int i=0;i<30000;i+=3){
+		temp[0] = vec[i+0];
+		temp[1] = vec[i+1];
+		temp[2] = vec[i+2];
+		avgTime[j] = NormalizeASM(temp);
+		printf("Time for vector #%i: %ims\n -----\n", j, avgTime[j]);
+		
+		sumTimeASM += avgTime[j];
+		j++;
+	}
+
+	//divide by number of vectors to get average
+	totalAvgC = sumTimeC/10000.0;
+	totalAvgASM = sumTimeASM/10000.0;
+
+	printf("The total Calculation time in C is %dms\n", sumTimeC);	
+	printf("The average Calculation time in C is %fms\n", totalAvgC);
+		
+	printf("The total Calculation time in x86 is %dms\n", sumTimeASM);	
+	printf("The average Calculation time in x86 is %fms\n", totalAvgASM);
 	
 	return;
 }

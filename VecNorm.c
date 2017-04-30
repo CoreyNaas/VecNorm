@@ -5,7 +5,7 @@
 #include <time.h>
 
 int Normalize(float a[]);
-void NormalizeASM(float a[]);
+int NormalizeASM(float a[]);
 float * generate10k();
 void Over10kCalculations();
 
@@ -16,19 +16,26 @@ int main(){
 	printf( "Enter a vector like so: 3.5 7.3 1.1; or three zeros to generate vectors\n");
 	scanf("%f %f %f", &a[0], &a[1], &a[2]);
 	
+	//If the first vector is zero, generate 10k vectors and run normalization test
 	if(a[0] == 0){
 		vectors = generate10k();
 		Over10kCalculations(vectors);
+		printf("Goodbye!\n");
+		return(0);
 	}
 	
+	//print what was enter for proofing purposes
 	printf("You entered: %f %f %f\n", a[0], a[1], a[2]);
 	
+	//pass the given vectors to the c function
 	printf("Passing to C function...\n");
 	Normalize(a);
 	
+	//pass the given vectors to the x86 function
 	printf("Passing to x86 function...\n");
+	NormalizeASM(a);
 	
-	
+	printf("Goodbye!\n");
     return(0);
 }
 
@@ -39,33 +46,40 @@ int Normalize(float a[]){
 	float aN[3]; 
 	float aMag;
 	
+	//Magnitute equals the square root of the sum of squares
 	aMag = sqrt(a[0]*a[0] + a[1]*a[1] +a[2]*a[2]);
 	
+	//normalized vector equals vector over magnitude
 	aN[0] = a[0]/aMag;
 	aN[1] = a[1]/aMag;
 	aN[2] = a[2]/aMag;
 	
-	printf("Normalized vector:[%f %f %f]\n", aN[0], aN[1], aN[2]);
+	printf("Normalized vector by C:[%f %f %f]\n", aN[0], aN[1], aN[2]);
 	
 	gettimeofday(&stop, NULL);
-	printf("Operation took %lums to complete\n", stop.tv_usec - start.tv_usec);
+	printf("Operation by C took %dms to complete\n", stop.tv_usec - start.tv_usec);
 	
 	int timedist = stop.tv_usec - start.tv_usec;
 	return timedist;
 }
 
-void NormalizeASM(float a[]){
+int NormalizeASM(float a[]){
 	struct timeval stop, start;
 	gettimeofday(&start, NULL);
 	
 	float aN[3]; 
 	float aMag;
 	
+	//Call to x86 assembly vector normalization function
+	//goes here plox
+		
 	printf("Normalized vector:[%f %f %f]\n", aN[0], aN[1], aN[2]);
 	
 	gettimeofday(&stop, NULL);
-	printf("Operation took %lums to complete\n", stop.tv_usec - start.tv_usec);
-
+	printf("Operation by x86 took %dms to complete\n", stop.tv_usec - start.tv_usec);
+	
+	int timedist = stop.tv_usec - start.tv_usec;
+	return timedist;
 }
 
 float * generate10k(){
@@ -78,10 +92,15 @@ float * generate10k(){
 	
 	fp = fopen("10kVectors.txt", "w+");
 	
+	//generates float array of 30,000 random floating point numbers 
+	//between 0 and b for 10,000 random floating point vectors
 	for (int i=0;i<30000;i++){
 		vec[i] = ((float)rand()/(float)(RAND_MAX)) * b;
         fprintf(fp, "%f\n", vec[i]);
     }
+    
+    fclose(fp);
+    
     return vec;
 }
 
@@ -90,9 +109,8 @@ void Over10kCalculations(float * vec){
 	int avgTime[10000];
 	int sumTime;
 	double totalAvg;
-	
-	printf("hey there :)\n");
-	
+
+	//normalize each and every vector using the C function. All of them.
 	for (int i=0;i<10000;i+=3){
 		temp[0] = vec[i+0];
 		temp[1] = vec[i+1];
@@ -101,11 +119,21 @@ void Over10kCalculations(float * vec){
 		printf("Avg time for vector #%i: %ims\n", i, avgTime[i]);
 	}
 	
+// 	for (int i=0;i<10000;i+=3){
+// 		temp[0] = vec[i+0];
+// 		temp[1] = vec[i+1];
+// 		temp[2] = vec[i+2];
+// 		avgTime[i] = NormalizeASM(temp);
+// 		printf("Avg time for vector #%i: %ims\n", i, avgTime[i]);
+// 	}
+	
+	//sum up total time to normalize 10,000 vectors
 	for (int i=0;i<10000;i++){
 		sumTime += avgTime[i];
 	}
 	
-	totalAvg = (sumTime);
+	//divide by number of vectors to get average ;;Problems occurring here
+	totalAvg = sumTime/10000.0;
 	
 	printf("The average Calculation time is %fms\n", totalAvg);
 	

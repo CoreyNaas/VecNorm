@@ -14,7 +14,8 @@ int main(){
 	float *vectors;
 	
 	printf( "Enter a vector like so: 3.5 7.3 1.1; or three zeros to generate vectors\n");
-	scanf("%lf %lf %lf", &a[0], &a[1], &a[2]);
+	scanf("%f %f %f", &a[0], &a[1], &a[2]);
+	
 	if(a[0] == 0){
 		vectors = generate10k();
 		Over10kCalculations(vectors);

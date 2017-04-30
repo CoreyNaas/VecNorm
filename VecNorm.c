@@ -1,3 +1,14 @@
+//Corey Naas & Brian Scott
+//COSC 3303
+//2017/05/04
+//A program to generate 10,000 vectors, and to compare the time it takes to 
+//normalize all 10,000 vectors using C and x86 assembly.
+//
+//Special thanks to Brian Scott for collaboration on the x86 assembly function. 50/50 contribution.
+//Special thanks to the people of StackOverflow for helping me fix the little problems and teaching 
+//	me the basics of programming as a junior CS student.
+//Special thanks to my mom for keeping me alive those first nine months, and then 21 years after that.
+
 #include <stdio.h>
 #include <math.h>
 #include <sys/time.h>
@@ -72,8 +83,17 @@ int NormalizeASM(float a[]){
 	float aN[3]; 
 	float aMag;
 	
+	printf("Vector being normalized:[%f %f %f]\n", a[0], a[1], a[2]);
+	
+	//Requirements of the x86 function:
+	//Input: 	An array of three floating point numbers
+	//Output: 	console print of the input vector, but normalized, OR Array of input 
+	//			vector, but normalized, to be printed below
+	
 	//Call to x86 assembly vector normalization function
-	//goes here plox
+	//goes 
+	//here 
+	//pl0x
 		
 	printf("Normalized vector:[%f %f %f]\n", aN[0], aN[1], aN[2]);
 	
